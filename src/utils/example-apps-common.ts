@@ -61,7 +61,7 @@ const configureCodeEditors = (userConfig: UserConfig, code: string, codeOriginal
     }
 }
 
-const saveMainCode = (saveFromDiff: boolean) => {
+export const saveMainCode = (saveFromDiff: boolean) => {
     if (saveFromDiff) {
         return wrapper.getModel(true)!.getValue()
     } else {

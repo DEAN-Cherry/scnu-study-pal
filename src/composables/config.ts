@@ -14,18 +14,18 @@ export const createUserConfig = (code: string): UserConfig => {
 				// path: 'pyright',
 				extraParams: { authorization: 'UserAuth' },
 				secured: false,
-				startOptions: {
-					onCall: (languageClient?: MonacoLanguageClient) => {
-						setTimeout(() => {
-							['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
-								vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
-									languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args })
-								})
-							})
-						}, 250)
-					},
-					reportStatus: true,
-				},
+				// startOptions: {
+				// 	onCall: (languageClient?: MonacoLanguageClient) => {
+				// 		setTimeout(() => {
+				// 			['pyright.restartserver', 'pyright.organizeimports'].forEach((cmdName) => {
+				// 				vscode.commands.registerCommand(cmdName, (...args: unknown[]) => {
+				// 					languageClient?.sendRequest('workspace/executeCommand', { command: cmdName, arguments: args })
+				// 				})
+				// 			})
+				// 		}, 250)
+				// 	},
+				// 	reportStatus: true,
+				// },
 			},
 			clientOptions: {
 				documentSelector: ['python'],

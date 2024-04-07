@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import * as vscode from 'vscode'
 import '@codingame/monaco-vscode-python-default-extension'
-import { RegisteredFileSystemProvider, registerFileSystemOverlay, RegisteredMemoryFile } from '@codingame/monaco-vscode-files-service-override'
+import { RegisteredFileSystemProvider, RegisteredMemoryFile, registerFileSystemOverlay } from '@codingame/monaco-vscode-files-service-override'
 import { useWorkerFactory } from 'monaco-editor-wrapper/workerFactory'
-import { getTextContent, getWrapper } from '@/utils/example-apps-common'
 
-const code = 'print("Hello, World!")'
-const input = computed(() => handleOutput())
+const codeStore = useCodeStore()
+const { input } = toRefs(codeStore)
+const code = input.value
+
 const configureMonacoWorkers = () => {
   useWorkerFactory({ basePath: '../../../node_modules' })
 }
@@ -16,9 +17,9 @@ const runPythonWrapper = async () => {
   registerFileSystemOverlay(1, fileSystemProvider)
 
   try {
-    const userConfig = createUserConfig(code.value)
+    const userConfig = createUserConfig(code)
     const htmlElement = document.getElementById('monaco-editor-root')
-    await startEditor(userConfig, htmlElement, code.value)
+    await startEditor(userConfig, htmlElement, code)
     // document.querySelector('#button-start')?.addEventListener('click', async () => {
     //   await startEditor(userConfig, htmlElement, code)
     // })
@@ -30,12 +31,6 @@ const runPythonWrapper = async () => {
   }
 }
 
-const handleOutput = () => {
-  const wrapper = getWrapper()
-  const textInput = wrapper.getModel(true)?.getValue() ?? ''
-  return textInput
-
-}
 
 onMounted(() => {
   configureMonacoWorkers()
@@ -43,7 +38,8 @@ onMounted(() => {
 })
 onUnmounted(async () => {
   const userConfig = createUserConfig(code)
-  await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor)
+  input.value = await disposeEditor(userConfig.wrapperConfig.editorAppConfig.useDiffEditor)
+
 })
 </script>
 

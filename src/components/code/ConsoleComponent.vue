@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import * as pyodideModule from 'pyodide'
-const pythonCode = `print("Hello, Pyodide from Vue!")
-a = 1
-a = b
-b
-`
+import { saveMainCode } from '@/utils/example-apps-common'
+
+const codeStore = useCodeStore()
+const { input } = toRefs(codeStore)
 const pyodideReady = ref(false)
-const result = ref('')
-const output = ref('Click to run')
+const cnt = ref(0)
+const output = ref('')
 const pyodide = ref()
+
 async function loadPyodide() {
   if (!pyodideReady.value) {
     pyodide.value = await pyodideModule.loadPyodide({ stdout: addToOutput, stderr: addToOutput })
@@ -17,31 +17,28 @@ async function loadPyodide() {
 }
 
 function addToOutput(s: string) {
-  output.value += `${s}\n`
+  output.value += `${ s }\n`
 }
-const runPythonCode = async () => {
-  if (!pyodideReady.value) {
-  } else {
-    console.log('Pyodide is already loaded.')
-    await pyodide.value.runPythonAsync(pythonCode)
-  }
 
-}
 
 async function evaluatePython() {
-  addToOutput(`>>>${pythonCode}`)
+  input.value = saveMainCode(false)
+  addToOutput(`Input [${cnt.value}]>>>\n${ input.value }\nOutput [${cnt.value}]>>>`)
 
   try {
     // Since pyodide 0.18.0, you must call loadPackagesFromImports()
     // to import any python packages referenced via import statements in your code.
     // This function will no longer do it for you.
-    await pyodide.value.loadPackagesFromImports(pythonCode, addToOutput, addToOutput)
-    let result = await pyodide.value.runPythonAsync(pythonCode)
-    addToOutput(`${result}`)
+    await pyodide.value.loadPackagesFromImports(input.value, addToOutput, addToOutput)
+    let result = await pyodide.value.runPythonAsync(input.value)
+    addToOutput(`${ result }\n`)
+  } catch (e) {
+    addToOutput(`${ e }\n`)
   }
-  catch (e) {
-    addToOutput(`${e}`)
-  }
+  cnt.value++
+}
+function clearOutput() {
+  output.value = ''
 }
 
 onBeforeMount(async () => {
@@ -52,23 +49,33 @@ onBeforeMount(async () => {
 
 <template>
   <div
-    mt-4 flex flex-col
+    mt-2 flex flex-col
     items-center
     justify-center
   >
-    <p>Console</p>
-    <ElButton primary @click="runPythonCode">
-      Run Python Code
-    </ElButton>
-    <ElButton primary @click="evaluatePython">
-      Run Python Code
-    </ElButton>
-    <p text-pretty>
-      Result:{{ result }}
-    </p>
-    <p whitespace="pre-wrap" text-pretty>
-      OutPut: {{ output }}
-    </p>
+    <div
+      w-full flex flex-row
+      items-center justify-center space-x-4
+    >
+      <p text-3>
+        Console
+      </p>
+      <ElButton size="small" primary @click="evaluatePython" :disabled="!pyodideReady">
+        运行
+      </ElButton>
+      <ElButton size="small" primary @click="clearOutput" :disabled="!pyodideReady">
+        清除输出
+      </ElButton>
+    </div>
+    <div w-full>
+      <p
+        whitespace="pre-wrap" ml-5
+        text-pretty
+        text-13px
+      >
+        {{ output }}
+      </p>
+    </div>
   </div>
 </template>
 
