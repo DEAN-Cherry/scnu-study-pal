@@ -4,12 +4,10 @@ import 'splitpanes/dist/splitpanes.css'
 import EditorComponent from '@/components/code/EditorComponent.vue'
 
 const timeStore = useTimerStore()
-const quizStore = useQuizStore()
 
 
 onMounted(() => {
   timeStore.startTimer(45 * 60 * 1000)
-  quizStore.initResult()
 })
 </script>
 

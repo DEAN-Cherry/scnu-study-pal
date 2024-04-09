@@ -4,7 +4,7 @@ defineProps({ questionTitle: { type: String, default: '' } })
 
 <template>
   <div m="x-3 t-2">
-    <p text="[#020202] dark:[#f2f2f2] 15px">
+    <p text="[#020202] dark:[#f2f2f2] 15px" whitespace="pre-wrap">
       {{ questionTitle }}
     </p>
   </div>

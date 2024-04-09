@@ -17,20 +17,25 @@ const questionObject = computed(() => {
 })
 
 onMounted(() => {
-  console.log(props.questionList)
-  console.log(props.questionId)
+  console.log('Base Question', props.questionList)
 })
 </script>
 
 <template>
-  <div flex>
-    <div flex="col">
-      <div mx-2>
-        <QuestionTitle :question-title="questionObject.question" />
+  <div w-full flex>
+    <div flex="col" w-full>
+      <div w-full>
+        <QuestionTitle mx-6 :question-title="questionObject.question" />
       </div>
       <div>
         <template v-if="questionObject.type === 'singleChoice'">
           <SingleChoiceQuestion :data-list="questionObject.dataList" />
+        </template>
+        <template v-else-if="questionObject.type === 'multipleChoice'">
+          <MultipleChoiceQuestion :data-list="questionObject.dataList" />
+        </template>
+        <template v-else-if="questionObject.type === 'matching'">
+          <MatchingQuestion :data-list="questionObject.dataList" />
         </template>
       </div>
     </div>

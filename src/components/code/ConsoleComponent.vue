@@ -17,6 +17,7 @@ async function loadPyodide() {
 }
 
 function addToOutput(s: string) {
+  if(s)
   output.value += `${ s }\n`
 }
 
@@ -31,7 +32,10 @@ async function evaluatePython() {
     // This function will no longer do it for you.
     await pyodide.value.loadPackagesFromImports(input.value, addToOutput, addToOutput)
     let result = await pyodide.value.runPythonAsync(input.value)
+    if(result)
     addToOutput(`${ result }\n`)
+    else
+    addToOutput('\n')
   } catch (e) {
     addToOutput(`${ e }\n`)
   }

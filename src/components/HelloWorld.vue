@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import type { Answers } from '@/typings/quiz'
+import { ANSWER_TYPE } from '@/typings/enum'
 
 defineProps<{ msg: string }>()
 
@@ -12,7 +14,13 @@ const curDate = ref('')
 const toast = () => {
   ElMessage.success('Hello')
 }
-
+const answers: Answers = { [0]: { type: ANSWER_TYPE.SINGLE_CHOICE, answer: 'A' } }
+const testData = ref({
+  name: 'apple',
+  id: 1,
+  nested: { text: 'Hello world', id : 0 },
+  nested2: answers,
+})
 const value1 = ref(true)
 const timeStore = useTimerStore()
 
@@ -20,11 +28,30 @@ function handleClick() {
   timeStore.resetTimer()
 }
 
+function testD(){
+  const nested = testData.value.nested
+  const td = testData.value
+  const nested2 = testData.value.nested2
+  nested2[1] = { type: ANSWER_TYPE.MATCHING, answer: 'Test' }
+  nested.text = 'Hello world2'
+  td.id++
+  nested.id ++
+}
+
 </script>
 
 <template>
   <h1 color="$ep-color-primary">
     {{ msg }}
+    <br>
+    {{ testData.name }}
+    {{ testData.id }}
+    {{ testData.nested.text }}
+    {{ testData.nested.id }}
+    {{ testData.nested2[0] }}
+    nested2
+    <br>
+    {{ testData.nested2[1] }}
   </h1>
 
   <p>
@@ -43,6 +70,9 @@ function handleClick() {
   <div class="my-2 flex flex-wrap items-center justify-center text-center">
     <ElButton @click="handleClick">
       reset timer
+    </ElButton>
+    <ElButton type="primary" @click="testD">
+      test nested ref
     </ElButton>
     <el-button @click="count++">
       count is: {{ count }}

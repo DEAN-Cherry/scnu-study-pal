@@ -1,23 +1,45 @@
 <script setup lang="ts">
 
 // pinia store
+
+import { QUIZ_TYPE } from '@/typings/enum'
+
 const quizStore = useQuizStore()
 const timeStore = useTimerStore()
 
 const { currentQuestion, currentPage } = toRefs(quizStore)
 const { duration, timerColor } = toRefs(timeStore)
-
+const page = ref()
 const resources = computed(() => {
   return getTopic(currentQuestion.value.quizType, currentQuestion.value.topicId)
 })
 
 
-const topic = ref<string>('基础任务')
+const topic = computed(() => {
+  switch (currentQuestion.value.quizType) {
+    case QUIZ_TYPE.BASE:
+      return '基础任务'
+    case QUIZ_TYPE.ADVANCED:
+      return '高级任务'
+    default:
+      return '基础任务'
+  }
+})
 
 const handleCurrentChange = (val: number) => {
   currentQuestion.value.questionId = val - 1
-  console.log(`current page: ${ val }`)
+  quizStore.renderUserAnswer()
 }
+
+function handleSubmit() {
+  quizStore.submitAnswer()
+  quizStore.autoNextTopic()
+}
+
+onMounted(() => {
+  quizStore.initResult(quizStore.currentQuestion.quizType)
+
+})
 </script>
 
 <template>
@@ -62,18 +84,19 @@ const handleCurrentChange = (val: number) => {
       </div>
       <div grow p="b-5">
         <div flex justify-center m="b-4">
-          <ElButton type="primary" plain>
+          <ElButton type="primary" plain @click="handleSubmit">
             提交
           </ElButton>
         </div>
         <div>
           <el-pagination
-            v-model="currentPage"
+            v-model="page"
             flex="justify-center"
             small background mt-4
             layout="prev, pager, next"
             :total="resources.questionList.length"
             :page-size="1"
+            :current-page="currentPage"
             @current-change="handleCurrentChange"
           />
         </div>

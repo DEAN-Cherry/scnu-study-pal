@@ -44,20 +44,22 @@ export interface QuestionMark {
 	questionId: number
 }
 
-export type Answer = string | string[] | { [key: string]: string }
+export type Answer = string | string[] | { [key: string]: string } | { [key: number]: string }
 
 export interface Answers {
-	questionId: number
-	type: ANSWER_TYPE
-	answer: Answer
+	[questionId: number]: {
+		type: ANSWER_TYPE
+		answer: Answer
+	}
 }
 
 export interface AnswerSheet {
-	[topicId: number]: Answers[];
+	[topicId: number]: Answers;
 }
 
 export interface QuizResult {
-	quizType: QUIZ_TYPE
-	score: number
-	answerSheet: AnswerSheet
+	[quizType: number]: {
+		score: number
+		answerSheet: AnswerSheet
+	}
 }

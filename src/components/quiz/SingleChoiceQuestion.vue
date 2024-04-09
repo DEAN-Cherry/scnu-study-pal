@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { QUIZ_TYPE } from '@/typings/enum'
 
-const radio = ref<string>('A')
+const quizStore = useQuizStore()
+const { answer, radio } = toRefs(quizStore)
 
 function onChange() {
   console.log(radio.value)
+  answer.value = radio.value
 }
 
 const props = defineProps({
@@ -18,8 +20,9 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  console.log(props.dataList)
-  console.log(props.questionId)
+
+  quizStore.renderUserAnswer()
+  answer.value = radio.value
 })
 </script>
 
@@ -27,7 +30,7 @@ onMounted(() => {
   <div>
     <ElRadioGroup
       v-model="radio"
-      @click="onChange()"
+      @change="onChange"
       style="display: flex;"
     >
       <div>
