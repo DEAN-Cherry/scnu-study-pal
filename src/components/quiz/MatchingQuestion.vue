@@ -2,7 +2,6 @@
 
 import { QUIZ_TYPE } from '@/typings/enum'
 import { parseIndex } from '@/utils/base'
-import appleImage from '@/assets/img/base_exam/apple.png'
 const props = defineProps({
   dataList: {
     type: Object, default() {

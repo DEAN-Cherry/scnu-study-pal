@@ -159,7 +159,15 @@ export default defineConfig({
 		Icons({ autoInstall: true }),
 
 	],
-
+	server:{
+		proxy:{
+			'/api': {
+				target: 'http://localhost:8000',
+				changeOrigin: true,
+				rewrite: (path) => path.replace('/api', ''),
+			},
+		},
+	},
 	optimizeDeps: { exclude: ['pyodide'], esbuildOptions: { plugins: [importMetaUrlPlugin] } },
 	resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
 	css: { preprocessorOptions: { scss: { additionalData: '@use "@/styles/element/index.scss" as *;' } } },

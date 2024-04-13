@@ -1,5 +1,3 @@
-
-
 export const useTimerStore = defineStore('timer', () => {
 	const timer = ref<number>(0)
 	const timerOn = ref<boolean>(false)
@@ -10,6 +8,7 @@ export const useTimerStore = defineStore('timer', () => {
 	const timerRemaining = ref<number>(0)
 	const timerPercent = ref<number>(0)
 	const duration = ref<string>('00:00:00')
+	const totalSeconds = ref<number>(0)
 
 	const timerColor = computed(() => {
 		if (timerPercent.value > 50) {
@@ -59,6 +58,7 @@ export const useTimerStore = defineStore('timer', () => {
 	}
 
 	function stopTimer() {
+		totalSeconds.value = Math.floor((Date.now() - timerStart.value) / 1000)
 		clearInterval(timerInterval.value)
 		timerOn.value = false
 	}
@@ -75,15 +75,34 @@ export const useTimerStore = defineStore('timer', () => {
 		duration.value = '00:00:00'
 	}
 
+	function getTimeScore():number {
+		const minutes = Math.floor(totalSeconds.value / 60)
+		if (minutes <= 44) {
+			return 0
+		} else if (minutes <= 55) {
+			return -5
+		} else if (minutes <= 65) {
+			return -10
+		} else if (minutes <= 75) {
+			return -15
+		} else if (minutes <= 85) {
+			return -20
+		} else {
+			return -25
+		}
+	}
+
 	return {
 		timer, timerOn, timerInterval, timerStart, timerEnd, timerDuration, timerRemaining, timerPercent, timerColor,
+		totalSeconds,
 		duration,
 		startTimer, stopTimer, resetTimer,
+		getTimeScore,
 	}
 }, {
 	persist: {
- paths: ['timerStart',
-'timerInterval',
-'duration'],
+		paths: ['timerStart',
+			'timerInterval',
+			'duration'],
 	},
 })

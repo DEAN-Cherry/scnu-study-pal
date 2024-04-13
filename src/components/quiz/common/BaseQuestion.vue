@@ -37,6 +37,9 @@ onMounted(() => {
         <template v-else-if="questionObject.type === 'matching'">
           <MatchingQuestion :data-list="questionObject.dataList" />
         </template>
+        <template v-else-if="questionObject.type === 'programming'">
+          <ProgrammingQuestion />
+        </template>
       </div>
     </div>
   </div>

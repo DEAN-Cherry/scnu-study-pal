@@ -41,6 +41,14 @@ const handleClose = (key: string, keyPath: string[]) => {
         考试测验
       </template>
     </el-menu-item>
+    <el-menu-item index="/app/result">
+      <ElIcon>
+        <IconMdiHome />
+      </ElIcon>
+      <template #title>
+        考试结果
+      </template>
+    </el-menu-item>
     <el-menu-item index="/app">
       <ElIcon>
         <IconMdiHome />

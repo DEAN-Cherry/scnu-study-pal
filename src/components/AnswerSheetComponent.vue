@@ -5,30 +5,19 @@ const quizStore = useQuizStore()
 const exam = getExam(quizStore.currentQuestion.quizType)
 
 const drawer = ref(false)
-const radio1 = ref('Option 1')
 const isCurrentQuestion = computed(() => (topicIndex: number, questionIndex: number) => {
   return quizStore.currentQuestion.topicId === topicIndex && quizStore.currentQuestion.questionId === questionIndex
 })
 
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('Are you sure you want to close this?')
-    .then(() => {
-      done()
-    })
-    .catch(() => {
-      // catch error
-    })
-}
 
 function cancelClick() {
   drawer.value = false
 }
 
 function confirmClick() {
-  ElMessageBox.confirm(`Are you confirm to chose ${ radio1.value } ?`)
-    .then(() => {
-      drawer.value = false
-    })
+  ElMessageBox.confirm('是否交卷?', { confirmButtonText: '确认', cancelButtonText: '取消' }).then(() => {
+    drawer.value = false
+  })
     .catch(() => {
       // catch error
     })
@@ -50,6 +39,10 @@ function renderAvatar(topicIndex: number, questionIndex: number) {
           return 'avatar-correct'
         case false:
           return 'avatar-wrong'
+        case -1:
+          return 'avatar-halt'
+        default:
+          return ''
       }
     } else {
       return ''
@@ -97,37 +90,6 @@ function renderAvatar(topicIndex: number, questionIndex: number) {
             </template>
           </div>
         </template>
-        <div>
-          <ElDivider>
-            <h3> 题目1</h3>
-          </ElDivider>
-          <div p-2 space-x-4 space-y-4>
-            <el-avatar style="background-color: #21ba45">
-              user
-            </el-avatar>
-            <el-avatar class="avatar-wrong">
-              user
-            </el-avatar>
-            <el-avatar cursor="pointer">
-              user
-            </el-avatar>
-            <el-avatar size="large">
-              user
-            </el-avatar>
-            <el-avatar> user</el-avatar>
-            <el-avatar> user</el-avatar>
-            <el-avatar> user</el-avatar>
-            <el-avatar> user</el-avatar>
-          </div>
-        </div>
-      </div>
-      <div>
-        <el-radio v-model="radio1" value="Option 1" size="large">
-          Option 1
-        </el-radio>
-        <el-radio v-model="radio1" value="Option 2" size="large">
-          Option 2
-        </el-radio>
       </div>
     </template>
     <template #footer>
@@ -136,7 +98,7 @@ function renderAvatar(topicIndex: number, questionIndex: number) {
           取消
         </el-button>
         <el-button type="primary" @click="confirmClick">
-          确认
+          交卷
         </el-button>
       </div>
     </template>
@@ -150,5 +112,9 @@ function renderAvatar(topicIndex: number, questionIndex: number) {
 
 .avatar-wrong {
   background-color: #f56c6c;
+}
+
+.avatar-halt {
+  background-color: #f0ad4e;
 }
 </style>

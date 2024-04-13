@@ -28,6 +28,11 @@ export enum QUESTION_TYPE {
 	PROGRAMMING
 }
 
+export enum ROLE{
+	USER,
+	ASSISTANT
+}
+
 const questionTypeMapRaw: QuestionTypeMapType = {
 	[QUESTION_TYPE.SINGLE_CHOICE]: 'singleChoice',
 	[QUESTION_TYPE.MULTIPLE_CHOICE]: 'multipleChoice',

@@ -4,6 +4,7 @@ import { toggleDark } from '@/composables'
 
 const isValid = ref(false)
 const timeStore = useTimerStore()
+const quizStore = useQuizStore()
 
 interface RuleForm {
   id: number
@@ -66,7 +67,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 function onStartHandler() {
+  timeStore.resetTimer()
   timeStore.startTimer(45 * 60 * 1000)
+  quizStore.resetQuiz()
 }
 
 </script>

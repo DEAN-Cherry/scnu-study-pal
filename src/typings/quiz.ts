@@ -63,3 +63,29 @@ export interface QuizResult {
 		answerSheet: AnswerSheet
 	}
 }
+
+export interface Statement{
+	type: string,
+	correct: string,
+	wrong: string
+	text?: string
+	case?: { [key: string]: string }
+}
+
+export interface Evaluation {
+	score: number,
+	level: string,
+	comment: string
+}
+
+// export interface Exam {
+// 	title: string,
+//
+// }
+//
+// export interface Topic {
+// 	title: string,
+// 	totalQuestion: number,
+// 	questionList: Question[]
+//
+// }
